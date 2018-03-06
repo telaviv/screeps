@@ -20,15 +20,8 @@ const findSourceAdjacentWalls = creep => {
         for (adjacent of adjacency) {
             const x = source.pos.x + adjacent.x
             const y = source.pos.y + adjacent.y
-            console.log(
-                '(x, y) - terrain: ',
-                '(',
-                x,
-                ', ',
-                y,
-                ') -',
-                Game.map.getTerrainAt(x, y, creep.room.name),
-            )
+            const terrain = Game.map.getTerrainAt(x, y, creep.room.name)
+            console.log('(x, y) - terrain: ', '(', x, ', ', y, ') -', terrain)
             if (Game.map.getTerrainAt(x, y, creep.room.name) === 'wall') {
                 walls.push(new RoomPosition(x, y, creep.room.name))
             }
@@ -43,7 +36,7 @@ const roleAttacker = {
         const closestWall = creep.pos.findClosestByPath(
             findSourceAdjacentWalls(creep),
         )
-        creep.say('✊ attacking)')
+        creep.say('attacking')
     },
 }
 module.exports = roleAttacker
