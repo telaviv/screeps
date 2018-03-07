@@ -1,0 +1,19 @@
+{
+  "name": "screeps",
+  "version": "1.0.0",
+  "description": "screeps thing",
+  "main": "src/main.js",
+  "dependencies": {
+    "grunt": "^1.0.2",
+    "grunt-screeps": "^1.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "screeps"
+  ],
+  "author": "Shawn Krisman",
+  "license": "GPL-3.0"
+}
