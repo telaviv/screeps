@@ -8,12 +8,12 @@ const ROLE_TYPES = [
     {
         role: 'harvester',
         count: 1,
-        parts: [WORK, WORK, WORK, WORK],
+        parts: [WORK, WORK, WORK],
     },
     {
         role: 'pickup',
         count: 1,
-        parts: [CARRY, CARRY, MOVE, MOVE],
+        parts: [CARRY, MOVE],
     },
     {
         role: 'upgrader',
