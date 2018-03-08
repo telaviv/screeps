@@ -1,6 +1,38 @@
 const roleHarvester = require('role.harvester')
 const roleUpgrader = require('role.upgrader')
 const roleAttacker = require('role.attacker')
+const roleBuilder = require('role.builder')
+const rolePickup = require('role.pickup')
+
+const ROLE_TYPES = [
+    {
+        role: 'harvester',
+        count: 1,
+        parts: [WORK, WORK, WORK, WORK],
+    },
+    {
+        role: 'pickup',
+        count: 1,
+        parts: [CARRY, CARRY, MOVE, MOVE],
+    },
+    {
+        role: 'upgrader',
+        count: 10,
+        parts: [WORK, CARRY, MOVE],
+    },
+    {
+        role: 'builder',
+        count: 10,
+        parts: [WORK, CARRY, MOVE],
+    },
+]
+
+const ROLE_RUNNERS = {
+    harvester: roleHarvester,
+    pickup: rolePickup,
+    builder: roleBuilder,
+    upgrader: roleUpgrader,
+}
 
 module.exports.loop = function() {
     const SPAWN = Game.spawns['PatreSpawn']
@@ -12,55 +44,22 @@ module.exports.loop = function() {
         }
     }
 
-    var harvesters = _.filter(
-        Game.creeps,
-        creep => creep.memory.role == 'harvester',
-    )
-    console.log('Harvesters: ' + harvesters.length)
-
-    var attackers = _.filter(
-        Game.creeps,
-        creep => creep.memory.role == 'attacker',
-    )
-    console.log('Attackers: ' + attackers.length)
-
-    if (harvesters.length < 2) {
-        var newName = 'Harvester' + Game.time
-        console.log('Spawning new harvester: ' + newName)
-        SPAWN.spawnCreep([WORK, CARRY, MOVE], newName, {
-            memory: { role: 'harvester' },
-        })
+    for (const { role, count, runner, parts } of ROLE_TYPES) {
+        var creeps = _.filter(Game.creeps, creep => creep.memory.role === role)
+        console.log(`${role}: ${creeps.length}`)
+        if (creeps.length < count) {
+            var newName = `${role}${Game.time}`
+            const ret = SPAWN.spawnCreep(parts, newName, {
+                memory: { role: role },
+            })
+            if (ret === OK) {
+                console.log(`Spawning new ${role}: ` + newName)
+            }
+        }
     }
 
-    if (attackers.length < 1) {
-        var newName = 'Attacker' + Game.time
-        console.log('Spawning new harvester: ' + newName)
-        SPAWN.spawnCreep([ATTACK, ATTACK, MOVE], newName, {
-            memory: { role: 'attacker' },
-        })
-    }
-
-    if (SPAWN.spawning) {
-        var spawningCreep = Game.creeps[SPAWN.spawning.name]
-        SPAWN.room.visual.text(
-            '🛠️' + spawningCreep.memory.role,
-            SPAWN.pos.x + 1,
-            SPAWN.pos.y,
-            { align: 'left', opacity: 0.8 },
-        )
-    }
-
-    for (var name in Game.creeps) {
-        var creep = Game.creeps[name]
-        if (creep.memory.role == 'harvester') {
-            roleHarvester.run(creep)
-        }
-        if (creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep)
-        }
-        console.log('role', creep.memory.role)
-        if (creep.memory.role === 'attacker') {
-            roleAttacker.run(creep)
-        }
+    for (const name in Game.creeps) {
+        const creep = Game.creeps[name]
+        ROLE_RUNNERS[creep.memory.role].run(creep)
     }
 }
