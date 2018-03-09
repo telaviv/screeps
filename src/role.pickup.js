@@ -1,23 +1,36 @@
 const rolePickup = {
     /** @param {Creep} creep **/
-    run: function(creep) {
+    run: creep => {
         if (creep.carry.energy === 0) {
-            const target = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY)
-            if (target) {
-                if (creep.pickup(target) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target)
-                }
+            const energyTarget = creep.room.lookForAt(
+                LOOK_ENERGY,
+                Game.flags.EnergyPickup1,
+            )[0]
+            console.log(`energy target ${JSON.stringify(energyTarget)}`)
+            const err = creep.pickup(energyTarget)
+            console.log(`pickup error: ${err}`)
+            if (err) {
+                console.log('energy pickup not in range')
+                creep.moveTo(energyTarget, {
+                    visualizePathStyle: { stroke: '#ffaa00' },
+                })
             }
         } else if (creep.carry.energy === creep.carryCapacity) {
             if (
-                creep.pos.x === Memory.dropOff.x &&
-                creep.pos.y === Memory.dropOff.y
+                creep.pos.x === Game.flags.EnergyHarvest.pos.x &&
+                creep.pos.y === Game.flags.EnergyHarvest.pos.y
             ) {
                 creep.drop(RESOURCE_ENERGY)
             } else {
-                creep.moveTo(Memory.dropOff.x, Memory.dropOff.y)
+                creep.moveTo(Game.flags.EnergyHarvest, {
+                    visualizePathStyle: { stroke: '#ffaa00' },
+                })
             }
         }
+    },
+
+    parts: () => {
+        return [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
     },
 }
 

@@ -29,6 +29,10 @@ var roleUpgrader = {
             }
         }
     },
+
+    parts: () => {
+        return [WORK, CARRY, MOVE]
+    },
 }
 
 module.exports = roleUpgrader
