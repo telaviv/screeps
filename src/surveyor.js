@@ -83,7 +83,7 @@ const calculateSourceHarvestingPoints = room => {
     return harvestPoints
 }
 
-const calculateSpawnOrder = room => {
+const calculateSourceOrder = room => {
     const center = room.memory.center
     return _.chain(_.keys(room.memory.harvestPoints))
         .map(spawnId => {
@@ -110,9 +110,9 @@ const assignRoomFeatures = () => {
             room.memory.harvestPoints = harvestPoints
         }
 
-        if (!room.memory.spawnOrder) {
-            const spawnOrder = calculateSpawnOrder(room)
-            room.memory.spawnOrder = spawnOrder
+        if (!room.memory.sourceOrder) {
+            const sourceOrder = calculateSourceOrder(room)
+            room.memory.sourceOrder = sourceOrder
         }
     })
 }
