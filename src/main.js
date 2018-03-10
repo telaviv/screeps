@@ -4,6 +4,7 @@ const roleAttacker = require('role.attacker')
 const roleBuilder = require('role.builder')
 const rolePickup = require('role.pickup')
 const { findNextSpawn } = require('spawnSelector')
+const { survey } = require('surveyor')
 
 const ROLE_RUNNERS = {
     harvester: roleHarvester,
@@ -28,16 +29,6 @@ const calculateRoomCenter = room => {
     return MAX_PATH[Math.floor(MAX_PATH.length / 2)]
 }
 
-const assignRoomCenters = () => {
-    _.each(Game.rooms, room => {
-        if (room.memory.center) {
-            return
-        }
-        const roomCenter = calculateRoomCenter(room)
-        room.memory.center = roomCenter
-    })
-}
-
 const spawnNewCreeps = spawn => {
     const role = findNextSpawn()
     if (role === null) {
@@ -54,7 +45,7 @@ const spawnNewCreeps = spawn => {
 
 module.exports.loop = function() {
     const SPAWN = Game.spawns['PatreSpawn']
-    assignRoomCenters()
+    survey()
 
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {
