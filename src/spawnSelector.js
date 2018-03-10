@@ -1,3 +1,16 @@
+const roleHarvester = require('role.harvester')
+const roleUpgrader = require('role.upgrader')
+const roleAttacker = require('role.attacker')
+const roleBuilder = require('role.builder')
+const rolePickup = require('role.pickup')
+
+const ROLE_RUNNERS = {
+    harvester: roleHarvester,
+    pickup: rolePickup,
+    builder: roleBuilder,
+    upgrader: roleUpgrader,
+}
+
 const ROLE_COUNTS = [
     { role: 'harvester', count: 1 },
     { role: 'pickup', count: 1 },
