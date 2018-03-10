@@ -6,11 +6,8 @@ const rolePickup = {
                 LOOK_ENERGY,
                 Game.flags.EnergyPickup1,
             )[0]
-            console.log(`energy target ${JSON.stringify(energyTarget)}`)
             const err = creep.pickup(energyTarget)
-            console.log(`pickup error: ${err}`)
             if (err) {
-                console.log('energy pickup not in range')
                 creep.moveTo(energyTarget, {
                     visualizePathStyle: { stroke: '#ffaa00' },
                 })

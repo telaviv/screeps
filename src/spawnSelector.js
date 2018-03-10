@@ -19,4 +19,18 @@ const findNextSpawn = () => {
     return null
 }
 
-module.exports = { findNextSpawn }
+const spawnNewCreeps = spawn => {
+    const role = findNextSpawn()
+    if (role === null) {
+        return
+    }
+    const newName = `${role}${Game.time}`
+    const ret = spawn.spawnCreep(ROLE_RUNNERS[role].parts(), newName, {
+        memory: { role: role },
+    })
+    if (ret === OK) {
+        console.log(`Spawning new ${role}: ` + newName)
+    }
+}
+
+module.exports = { spawnNewCreeps }

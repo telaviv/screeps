@@ -67,7 +67,7 @@ const calculateRoomCenter = room => {
             MAX_PATH = path.path
         }
     }
-    console.log('calculating room center')
+    console.log(`calculating room center: ${JSON.stringify(MAX_PATH)}`)
     return findClosestOpenPosition(MAX_PATH[Math.floor(MAX_PATH.length / 2)])
 }
 
@@ -83,6 +83,21 @@ const calculateSourceHarvestingPoints = room => {
     return harvestPoints
 }
 
+const calculateSpawnOrder = room => {
+    const center = room.memory.center
+    return _.chain(_.keys(room.memory.harvestPoints))
+        .map(spawnId => {
+            const pos = room.memory.harvestPoints[spawnId]
+            return {
+                id: spawnId,
+                distance: PathFinder.search(center, { pos }).cost,
+            }
+        })
+        .tap(thing => console.log(`what is it: ${JSON.stringify(thing)}`))
+        .sortBy(({ id, distance }) => distance)
+        .map(({ id, distance }) => id)
+}
+
 const assignRoomFeatures = () => {
     _.each(Game.rooms, room => {
         if (!room.memory.center) {
@@ -93,6 +108,11 @@ const assignRoomFeatures = () => {
         if (!room.memory.harvestPoints) {
             const harvestPoints = calculateSourceHarvestingPoints(room)
             room.memory.harvestPoints = harvestPoints
+        }
+
+        if (!room.memory.spawnOrder) {
+            const spawnOrder = calculateSpawnOrder(room)
+            room.memory.spawnOrder = spawnOrder
         }
     })
 }
