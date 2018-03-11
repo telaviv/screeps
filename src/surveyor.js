@@ -73,9 +73,12 @@ const calculateRoomCenter = room => {
 
 const calculateSourceHarvestingPoints = room => {
     const harvestPoints = {}
-    const center = calculateRoomCenter(room)
+    const center = room.memory.center
     for (const source of room.find(FIND_SOURCES)) {
+        console.log(`calulating harvest: ${JSON.stringify(source)}`)
         const path = PathFinder.search(center, { pos: source.pos, range: 1 })
+        const pos = path.path[path.path.length - 1]
+        console.log(`harvest location: ${JSON.stringify(pos)}`)
         if (!path.incomplete) {
             harvestPoints[source.id] = path.path[path.path.length - 1]
         }
@@ -84,17 +87,16 @@ const calculateSourceHarvestingPoints = room => {
 }
 
 const calculateSourceOrder = room => {
-    const center = room.memory.center
+    const controller = room.controller.pos
     return _.chain(_.keys(room.memory.harvestPoints))
         .map(spawnId => {
             const pos = room.memory.harvestPoints[spawnId]
             return {
                 id: spawnId,
-                distance: PathFinder.search(center, { pos }).cost,
+                distance: PathFinder.search(controller, { pos }).cost,
             }
         })
-        .tap(thing => console.log(`what is it: ${JSON.stringify(thing)}`))
-        .sortBy(({ id, distance }) => distance)
+        .sortBy('distance')
         .map(({ id, distance }) => id)
 }
 
