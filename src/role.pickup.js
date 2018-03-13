@@ -1,27 +1,23 @@
+const { moveTo } = require('utilities')
+
 const rolePickup = {
     /** @param {Creep} creep **/
     run: creep => {
         if (creep.carry.energy === 0) {
-            const energyTarget = creep.room.lookForAt(
-                LOOK_ENERGY,
-                Game.flags.EnergyPickup1,
-            )[0]
-            const err = creep.pickup(energyTarget)
-            if (err) {
-                creep.moveTo(energyTarget, {
-                    visualizePathStyle: { stroke: '#ffaa00' },
-                })
+            const harvestPoint =
+                creep.room.memory.harvestPoints[creep.memory.source]
+            if (
+                creep.pos.x !== harvestPoint.x ||
+                creep.pos.y !== harvestPoint.y
+            ) {
+                moveTo(creep, harvestPoint.x, harvestPoint.y)
             }
         } else if (creep.carry.energy === creep.carryCapacity) {
-            if (
-                creep.pos.x === Game.flags.EnergyHarvest.pos.x &&
-                creep.pos.y === Game.flags.EnergyHarvest.pos.y
-            ) {
+            const center = creep.room.memory.center
+            if (creep.pos.x === center.pos.x && creep.pos.y === center.pos.y) {
                 creep.drop(RESOURCE_ENERGY)
             } else {
-                creep.moveTo(Game.flags.EnergyHarvest, {
-                    visualizePathStyle: { stroke: '#ffaa00' },
-                })
+                moveTo(creep, center.x, creep.y)
             }
         }
     },

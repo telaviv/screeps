@@ -14,7 +14,7 @@ const ROLE_RUNNERS = {
 }
 
 module.exports.loop = function() {
-    const SPAWN = Game.spawns['PatreSpawn']
+    const SPAWN = Game.spawns['Patrespawn']
     survey()
 
     for (var name in Memory.creeps) {

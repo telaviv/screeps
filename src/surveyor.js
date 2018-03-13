@@ -9,6 +9,10 @@ const POTENTIAL_NEIGHBORS = [
     [1, 1],
 ]
 
+const findPath = (origin, goal) => {
+    return PathFinder.search(origin, goal, { swampCost: 1 })
+}
+
 const getEmptyNeighbors = pos => {
     const neighbors = []
     for (const [dx, dy] of POTENTIAL_NEIGHBORS) {
@@ -59,7 +63,7 @@ const calculateRoomCenter = room => {
     const controller = room.controller
     let MAX_PATH = []
     for (const source of sources) {
-        const path = PathFinder.search(controller.pos, {
+        const path = findPath(controller.pos, {
             pos: source.pos,
             range: 1,
         })
@@ -76,7 +80,7 @@ const calculateSourceHarvestingPoints = room => {
     const center = room.memory.center
     for (const source of room.find(FIND_SOURCES)) {
         console.log(`calulating harvest: ${JSON.stringify(source)}`)
-        const path = PathFinder.search(center, { pos: source.pos, range: 1 })
+        const path = findPath(center, { pos: source.pos, range: 1 })
         const pos = path.path[path.path.length - 1]
         console.log(`harvest location: ${JSON.stringify(pos)}`)
         if (!path.incomplete) {
@@ -93,11 +97,46 @@ const calculateSourceOrder = room => {
             const pos = room.memory.harvestPoints[spawnId]
             return {
                 id: spawnId,
-                distance: PathFinder.search(controller, { pos }).cost,
+                distance: findPath(controller, { pos }).cost,
             }
         })
         .sortBy('distance')
         .map(({ id, distance }) => id)
+}
+
+const createRoadConstructionSites = room => {
+    const center = new RoomPosition(
+        room.memory.center.x,
+        room.memory.center.y,
+        room.name,
+    )
+    let sites = [center]
+
+    const controllerPath = findPath(center, {
+        pos: room.controller.pos,
+    })
+
+    sites = sites.concat(controllerPath.path)
+
+    for (const harvestPoint of Object.values(room.memory.harvestPoints)) {
+        const harvestPosition = new RoomPosition(
+            harvestPoint.x,
+            harvestPoint.y,
+            room.name,
+        )
+        const path = findPath(center, {
+            pos: harvestPosition,
+        })
+        sites = sites.concat(path.path)
+    }
+
+    for (const site of sites) {
+        const err = room.createConstructionSite(site, STRUCTURE_ROAD)
+        if (err !== OK) {
+            console.log(`road creation failure: ${err}`)
+        }
+    }
+    room.memory.roadsAssigned = true
 }
 
 const assignRoomFeatures = () => {
@@ -115,6 +154,10 @@ const assignRoomFeatures = () => {
         if (!room.memory.sourceOrder) {
             const sourceOrder = calculateSourceOrder(room)
             room.memory.sourceOrder = sourceOrder
+        }
+
+        if (!room.memory.roadsAssigned) {
+            createRoadConstructionSites(room)
         }
     })
 }

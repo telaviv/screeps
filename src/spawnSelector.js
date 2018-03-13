@@ -26,14 +26,11 @@ const findNextEnergySpawn = spawn => {
     for (const source of spawn.room.memory.sourceOrder) {
         if (
             getCreepCount(
-                memory =>
-                    memory.source === source &&
-                    (memory.role === HARVESTER) === 0,
-            )
+                memory => memory.source === source && memory.role === HARVESTER,
+            ) === 0
         ) {
             return { source, role: HARVESTER }
         }
-
         if (
             getCreepCount(
                 memory => memory.source === source && memory.role === PICKUP,
@@ -51,7 +48,7 @@ const findNextSpawn = spawn => {
         return nextEnergySpawn
     }
     for ({ role, count } of ROLE_COUNTS) {
-        const currentCount = getCreepCount(role)
+        const currentCount = getCreepCount(memory => memory.role === role)
         if (currentCount < count) {
             return { role }
         }
