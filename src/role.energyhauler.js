@@ -1,26 +1,24 @@
 const { findEnergy, moveTo } = require('utilities')
 
-var roleUpgrader = {
+const roleEnergyHauler = {
     /** @param {Creep} creep **/
     run: function(creep) {
-        if (creep.memory.upgrading && creep.carry.energy == 0) {
-            creep.memory.upgrading = false
+        if (creep.memory.hauling && creep.carry.energy == 0) {
+            creep.memory.hauling = false
             creep.say('🔄 harvest')
         }
         if (
-            !creep.memory.upgrading &&
+            !creep.memory.hauling &&
             creep.carry.energy == creep.carryCapacity
         ) {
-            creep.memory.upgrading = true
+            creep.memory.hauling = true
             creep.say('⚡ upgrade')
         }
 
-        if (creep.memory.upgrading) {
-            if (
-                creep.upgradeController(creep.room.controller) ==
-                ERR_NOT_IN_RANGE
-            ) {
-                moveTo(creep, creep.room.controller)
+        if (creep.memory.hauling) {
+            const spawn = creep.room.findClosestByPath(FIND_MY_SPAWNS)
+            if (spawn) {
+                moveTo(creep, spawn)
             }
         } else {
             const target = findEnergy(creep)
@@ -37,4 +35,4 @@ var roleUpgrader = {
     },
 }
 
-module.exports = roleUpgrader
+module.exports = roleEnergyHauler

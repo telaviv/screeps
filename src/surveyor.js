@@ -1,3 +1,5 @@
+const { findPath } = require('utilities')
+
 const POTENTIAL_NEIGHBORS = [
     [-1, -1],
     [-1, 0],
@@ -8,10 +10,6 @@ const POTENTIAL_NEIGHBORS = [
     [1, 0],
     [1, 1],
 ]
-
-const findPath = (origin, goal) => {
-    return PathFinder.search(origin, goal, { swampCost: 1 })
-}
 
 const getEmptyNeighbors = pos => {
     const neighbors = []

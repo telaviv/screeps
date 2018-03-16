@@ -1,4 +1,4 @@
-const { moveTo } = require('utilities')
+const { moveTo, calculateDistance } = require('utilities')
 
 const rolePickup = {
     /** @param {Creep} creep **/
@@ -6,18 +6,29 @@ const rolePickup = {
         if (creep.carry.energy === 0) {
             const harvestPoint =
                 creep.room.memory.harvestPoints[creep.memory.source]
-            if (
-                creep.pos.x !== harvestPoint.x ||
-                creep.pos.y !== harvestPoint.y
-            ) {
+            const harvestPosition = new RoomPosition(
+                harvestPoint.x,
+                harvestPoint.y,
+                creep.room.name,
+            )
+            if (calculateDistance(creep.pos, { pos: harvestPosition }) > 1) {
                 moveTo(creep, harvestPoint.x, harvestPoint.y)
+            } else {
+                creep.say('picking up')
+                const target = creep.pos.findClosestByRange(
+                    FIND_DROPPED_RESOURCES,
+                )
+                const err = creep.pickup(target)
+                if (err !== OK) {
+                    console.log(`pickup error: ${err}`)
+                }
             }
-        } else if (creep.carry.energy === creep.carryCapacity) {
+        } else {
             const center = creep.room.memory.center
-            if (creep.pos.x === center.pos.x && creep.pos.y === center.pos.y) {
+            if (creep.pos.x === center.x && creep.pos.y === center.y) {
                 creep.drop(RESOURCE_ENERGY)
             } else {
-                moveTo(creep, center.x, creep.y)
+                moveTo(creep, center.x, center.y)
             }
         }
     },
