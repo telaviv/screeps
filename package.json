@@ -4,12 +4,13 @@
   "description": "screeps thing",
   "main": "src/main.js",
   "dependencies": {
-    "grunt": "^1.0.2",
+    "grunt": "^1.0.4",
     "grunt-screeps": "^1.4.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "send": "grunt screeps"
   },
   "keywords": [
     "screeps"

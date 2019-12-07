@@ -1,10 +1,1 @@
-Gruntfile.js
-node_modules
-.screepsrc
-assets/
-db.json
-example-mods/
-logs/
-mods.example.json
-mods.json
-steam_appid.txt
+.screeps.json
