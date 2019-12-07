@@ -3,6 +3,9 @@ const { moveTo, calculateDistance } = require('utilities')
 const rolePickup = {
     /** @param {Creep} creep **/
     run: creep => {
+        if (creep.spawning) {
+            return
+        }
         if (creep.carry.energy === 0) {
             const harvestPoint =
                 creep.room.memory.harvestPoints[creep.memory.source]
@@ -20,7 +23,9 @@ const rolePickup = {
                 )
                 const err = creep.pickup(target)
                 if (err !== OK) {
-                    console.log(`pickup error: ${err}`)
+                    console.log(
+                        `pickup error: ${err}: ${JSON.stringify(target)}`,
+                    )
                 }
             }
         } else {

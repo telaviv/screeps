@@ -14,6 +14,10 @@ const ROLE_RUNNERS = {
 }
 
 module.exports.loop = function() {
+    loop()
+}
+
+const loop = function() {
     const SPAWN = Game.spawns['Patrespawn']
     survey()
 
