@@ -22,6 +22,7 @@ const rolePickup = {
                     FIND_DROPPED_RESOURCES,
                 )
                 const err = creep.pickup(target)
+
                 if (err !== OK) {
                     console.log(
                         `pickup error: ${err}: ${JSON.stringify(target)}`,

@@ -3,14 +3,23 @@ const roleUpgrader = require('role.upgrader')
 const roleAttacker = require('role.attacker')
 const roleBuilder = require('role.builder')
 const rolePickup = require('role.pickup')
-const { spawnNewCreeps } = require('spawnSelector')
+const roleEnergyHauler = require('role.energyhauler')
+const {
+    HARVESTER,
+    PICKUP,
+    UPGRADER,
+    BUILDER,
+    ENERGY_HAULER,
+    spawnNewCreeps,
+} = require('spawnSelector')
 const { survey } = require('surveyor')
 
 const ROLE_RUNNERS = {
-    harvester: roleHarvester,
-    pickup: rolePickup,
-    builder: roleBuilder,
-    upgrader: roleUpgrader,
+    [HARVESTER]: roleHarvester,
+    [PICKUP]: rolePickup,
+    [BUILDER]: roleBuilder,
+    [UPGRADER]: roleUpgrader,
+    [ENERGY_HAULER]: roleEnergyHauler,
 }
 
 module.exports.loop = function() {

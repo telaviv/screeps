@@ -3,20 +3,27 @@ const roleUpgrader = require('role.upgrader')
 const roleAttacker = require('role.attacker')
 const roleBuilder = require('role.builder')
 const rolePickup = require('role.pickup')
+const roleEnergyHauler = require('role.energyhauler')
 
 const HARVESTER = 'harvester'
 const PICKUP = 'pickup'
 const UPGRADER = 'upgrader'
 const BUILDER = 'builder'
+const ENERGY_HAULER = 'energy hauler'
 
 const ROLE_RUNNERS = {
     [HARVESTER]: roleHarvester,
     [PICKUP]: rolePickup,
     [BUILDER]: roleBuilder,
     [UPGRADER]: roleUpgrader,
+    [ENERGY_HAULER]: roleEnergyHauler,
 }
 
-const ROLE_COUNTS = [{ role: UPGRADER, count: 5 }, { role: BUILDER, count: 5 }]
+const ROLE_COUNTS = [
+    { role: ENERGY_HAULER, count: 2 },
+    { role: UPGRADER, count: 5 },
+    { role: BUILDER, count: 5 },
+]
 
 const getCreepCount = memoryPred => {
     return _.filter(Game.creeps, creep => memoryPred(creep.memory)).length
@@ -70,4 +77,11 @@ const spawnNewCreeps = spawn => {
     }
 }
 
-module.exports = { spawnNewCreeps }
+module.exports = {
+    HARVESTER,
+    PICKUP,
+    UPGRADER,
+    BUILDER,
+    ENERGY_HAULER,
+    spawnNewCreeps,
+}

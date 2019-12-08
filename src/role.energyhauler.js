@@ -16,7 +16,7 @@ const roleEnergyHauler = {
         }
 
         if (creep.memory.hauling) {
-            const spawn = creep.room.findClosestByPath(FIND_MY_SPAWNS)
+            const spawn = creep.pos.findClosestByPath(FIND_MY_SPAWNS)
             if (spawn) {
                 moveTo(creep, spawn)
             }
